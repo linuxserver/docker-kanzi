@@ -1,0 +1,29 @@
+---
+
+# jenkins variables
+project_name: docker-kanzi
+external_type: github_commit
+release_type: stable
+release_tag: latest
+ls_branch: master
+repo_vars:
+  - EXT_GIT_BRANCH = 'master'
+  - EXT_USER = 'm0ngr31'
+  - EXT_REPO = 'kanzi'
+  - BUILD_VERSION_ARG = 'KANZI_COMMIT'
+  - LS_USER = 'linuxserver'
+  - LS_REPO = 'docker-kanzi'
+  - CONTAINER_NAME = 'kanzi'
+  - DOCKERHUB_IMAGE = 'linuxserver/kanzi'
+  - DEV_DOCKERHUB_IMAGE = 'lsiodev/kanzi'
+  - PR_DOCKERHUB_IMAGE = 'lspipepr/kanzi'
+  - DIST_IMAGE = 'alpine'
+  - MULTIARCH='true'
+  - CI='true'
+  - CI_WEB='false'
+  - CI_PORT='8000'
+  - CI_SSL='false'
+  - CI_DELAY='120'
+  - CI_DOCKERENV='TZ=US/Pacific'
+  - CI_AUTH='user:password'
+  - CI_WEBPATH=''

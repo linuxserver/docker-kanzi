@@ -1,0 +1,61 @@
+---
+
+# project information
+project_name: kanzi
+project_url: "https://lexigr.am/"
+project_logo: "https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/kanzi.png"
+project_blurb: "[{{ project_name|capitalize }}]({{ project_url }}), formerly titled Kodi-Alexa, this custom skill is the ultimate voice remote control for navigating Kodi. It can do anything you can think of (100+ intents).  This container also container lexigram-cli to setup Kanzi with an Amazon Developer Account."
+project_lsio_github_repo_url: "https://github.com/linuxserver/docker-{{ project_name }}"
+
+# supported architectures
+available_architectures:
+  - { arch: "{{ arch_x86_64 }}", tag: "amd64-latest"}
+  - { arch: "{{ arch_arm64 }}", tag: "arm64v8-latest"}
+  - { arch: "{{ arch_armhf }}", tag: "arm32v7-latest"}
+
+# development version
+development_versions: false
+development_versions_items:
+  - { tag: "latest", desc: "Stable" }
+  - { tag: "development", desc: "Releases from the `develop` branch" }
+
+# container parameters
+common_param_env_vars_enabled: true #PGID, PUID, etc, you can set it to 'optional'
+param_container_name: "{{ project_name }}"
+param_usage_include_env: true
+param_env_vars:
+  - { env_var: "TZ", env_value: "Europe/London", desc: "Specify a timezone to use EG Europe/London." }
+param_usage_include_vols: true
+param_volumes:
+  - { vol_path: "/config", vol_host_path: "</path/to/appdata/config>", desc: "Configuration files." }
+param_usage_include_ports: true
+param_ports:
+  - { external_port: "8000", internal_port: "8000", port_desc: "Application Port" }
+# application setup block
+app_setup_block_enabled: true
+app_setup_block: |
+ ### Initial setup
+ * Once you start the container for the first time, you need to perform some steps before use.
+  1.  Create an Amazon Developer Account [here.](https://developer.amazon.com/)
+  2.  Open a terminal in the docker container `docker exec -it lexigram bash`
+  3.  Enter the `/config` directory with `cd config`
+  4.  Enter `lexigram login --no-browser true` to setup your AWS credentials and copy the URL into a browser, login to your Amazon Developer Account and copy/paste the resulting authorisation code back into the terminal and press enter.
+  5.  Initialise the skill you wish to use with `lexigram init-skill kanzi`
+  6.  Deploy the skill with `lexigram deploy kanzi` and configure your endpoint in the form `https://server.com/kanzi/` (Be sure to include the trailing slash)
+  7.  Edit the file `kodi.config` according to your local setup and this will be used by the included gunicorn server to respond to requests.
+  8.  Reverse proxy this container with our [LetsEncrypt container](https://hub.docker.com/r/linuxserver/letsencrypt/)
+app_setup_nginx_reverse_proxy_snippet: true
+app_setup_nginx_reverse_proxy_block: "location /kanzi {
+		rewrite           ^/kanzi/(.*)  /$1  break;
+		proxy_pass        http://$IP-ADDRESS:8000;
+		proxy_redirect    http://$IP-ADDRESS:8000 /kanzi;
+		proxy_set_header   Host $host;
+		proxy_set_header   X-Real-IP $remote_addr;
+		proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header   X-Forwarded-Server $host;
+		proxy_set_header   X-Forwarded-Host $server_name;
+	}"
+# changelog
+
+changelogs:
+  - { date: "13.04.19:", desc: "Initial Release." }

@@ -1,0 +1,19 @@
+#!/usr/bin/with-contenv bash
+
+# create kodi.config if doesn't exist
+[[ ! -f /config/kodi.config ]] && \
+	cd /config && \
+	lexigram init-config \
+
+# remove /app/kanzi/kodi.config if exists
+[[ -f /app/kanzi/kodi.config ]] && \
+	rm /app/kanzi/kodi.config
+	
+# Create symlink of kodi.config if doesn't exist
+[[ ! -L /app/kanzi/kodi.config ]] && \
+    ln -s /config/kodi.config /app/kanzi/kodi.config
+    
+# permissions
+chown -R abc:abc \
+	/app \
+	/config

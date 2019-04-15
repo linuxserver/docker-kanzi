@@ -1,0 +1,6 @@
+#!/usr/bin/with-contenv bash
+
+cd /app/kanzi || exit
+
+exec \
+	s6-setuidgid abc gunicorn -b 0.0.0.0:8000 alexa:app
