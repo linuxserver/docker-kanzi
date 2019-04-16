@@ -1,5 +1,17 @@
 #!/usr/bin/with-contenv bash
 
+# Create dummy cli_config
+[[ ! -f /config/cli_config ]] && \
+    echo {} > /config/cli_config
+
+# Create ask config folder if doesn't exist
+[[ ! -d /root/.ask ]] && \
+    mkdir /root/.ask    
+    
+# Create symlink of cli_config if doesn't exist
+[[ ! -L /root/.ask/cli_config ]] && \
+	ln -s /config/cli_config /root/.ask/cli_config
+	
 # create kodi.config if doesn't exist
 [[ ! -f /config/kodi.config ]] && \
 	cd /config && \
