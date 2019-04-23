@@ -2,7 +2,7 @@
 
 # jenkins variables
 project_name: docker-kanzi
-external_type: github_release
+external_type: github_stable
 release_type: stable
 release_tag: latest
 ls_branch: master
