@@ -20,7 +20,7 @@ pipeline {
     DOCKERHUB_IMAGE = 'linuxserver/kanzi'
     DEV_DOCKERHUB_IMAGE = 'lsiodev/kanzi'
     PR_DOCKERHUB_IMAGE = 'lspipepr/kanzi'
-    DIST_IMAGE = 'alpine'
+    DIST_IMAGE = 'ubuntu'
     MULTIARCH='true'
     CI='true'
     CI_WEB='true'
