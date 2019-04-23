@@ -1,17 +1,21 @@
 #!/usr/bin/with-contenv bash
 
+# Copy deployed.txt file to /config
+[[ ! -f /config/deployed.txt ]] && \
+    cp /app/kanzi/deployed.txt /config/deployed.txt
+
 # Create dummy cli_config
 [[ ! -f /config/cli_config ]] && \
     echo {} > /config/cli_config
 
 # Create ask config folder if doesn't exist
 [[ ! -d /root/.ask ]] && \
-    mkdir /root/.ask    
-    
+    mkdir /root/.ask
+
 # Create symlink of cli_config if doesn't exist
 [[ ! -L /root/.ask/cli_config ]] && \
 	ln -s /config/cli_config /root/.ask/cli_config
-	
+
 # create kodi.config if doesn't exist
 [[ ! -f /config/kodi.config ]] && \
 	cd /config && \
@@ -20,11 +24,36 @@
 # remove /app/kanzi/kodi.config if exists
 [[ -f /app/kanzi/kodi.config ]] && \
 	rm /app/kanzi/kodi.config
-	
+
 # Create symlink of kodi.config if doesn't exist
 [[ ! -L /app/kanzi/kodi.config ]] && \
     ln -s /config/kodi.config /app/kanzi/kodi.config
-    
+
+#Necessary variables
+KANZI_VERSION=$(cat /app/kanzi/version.txt)
+DEPLOYED_VERSION=$(cat /config/deployed.txt)
+
+# Check for credentials in cli_config
+grep -q token /config/cli_config
+if [ $? != 0 ]
+ then
+  echo "Please see the readme at https://github.com/linuxserver/docker-kanzi#application-setup to register your Amazon Developer Account and configure your kodi.config file."
+ else 
+  echo "Amazon Developer Account already linked"
+   if [ "${KANZI_VERSION}" = "${DEPLOYED_VERSION}" ]; then
+     echo "${KANZI_VERSION} in this container is the same as the version previously deployed, not redeploying"
+    else
+     echo "Either never deployed previously or previous deployed version of Kanzi ${DEPLOYED_VERSION} is different to version ${KANZI_VERSION} in this container, so deploying" && \
+     cd /app/kanzi && \
+     if [ ! -d /app/kanzi/kanzi ]; then
+       lexigram init-skill kanzi
+     fi
+     lexigram deploy kanzi --source-dir /app/kanzi --invocation-name ${INVOCATION_NAME} --url ${URL_ENDPOINT} && \
+     echo "${KANZI_VERSION}" > /config/deployed.txt && \
+     echo "    Kanzi ${KANZI_VERSION} successfully deployed with invocation name ${INVOCATION_NAME} at ${URL_ENDPOINT}"
+   fi
+fi
+
 # permissions
 chown -R abc:abc \
 	/app \

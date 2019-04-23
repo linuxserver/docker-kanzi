@@ -22,7 +22,7 @@ Find us at:
 [![Build Status](https://ci.linuxserver.io/buildStatus/icon?job=Docker-Pipeline-Builders/docker-kanzi/master)](https://ci.linuxserver.io/job/Docker-Pipeline-Builders/job/docker-kanzi/job/master/)
 [![](https://lsio-ci.ams3.digitaloceanspaces.com/linuxserver/kanzi/latest/badge.svg)](https://lsio-ci.ams3.digitaloceanspaces.com/linuxserver/kanzi/latest/index.html)
 
-[Kanzi](https://lexigr.am/), formerly titled Kodi-Alexa, this custom skill is the ultimate voice remote control for navigating Kodi. It can do anything you can think of (100+ intents).  This container also container lexigram-cli to setup Kanzi with an Amazon Developer Account.
+[Kanzi](https://lexigr.am/), formerly titled Kodi-Alexa, this custom skill is the ultimate voice remote control for navigating Kodi. It can do anything you can think of (100+ intents).  This container also contains lexigram-cli to setup Kanzi with an Amazon Developer Account and automatically deploy it to Amazon.
 
 [![kanzi](https://raw.githubusercontent.com/linuxserver/docker-templates/master/linuxserver.io/img/kanzi.png)](https://lexigr.am/)
 
@@ -53,6 +53,8 @@ docker create \
   -e PUID=1000 \
   -e PGID=1000 \
   -e TZ=Europe/London \
+  -e INVOCATION_NAME=kanzi \
+  -e URL_ENDPOINT=https://server.com/kanzi/ \
   -p 8000:8000 \
   -v </path/to/appdata/config>:/config \
   --restart unless-stopped \
@@ -75,6 +77,8 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=Europe/London
+      - INVOCATION_NAME=kanzi
+      - URL_ENDPOINT=https://server.com/kanzi/
     volumes:
       - </path/to/appdata/config>:/config
     ports:
@@ -92,6 +96,8 @@ Container images are configured using parameters passed at runtime (such as thos
 | `-e PUID=1000` | for UserID - see below for explanation |
 | `-e PGID=1000` | for GroupID - see below for explanation |
 | `-e TZ=Europe/London` | Specify a timezone to use EG Europe/London. |
+| `-e INVOCATION_NAME=kanzi` | Specify an invocation name for this skill, use either kanzi or kod. |
+| `-e URL_ENDPOINT=https://server.com/kanzi/` | Specify the URL at which the webserver is reachable either `https://kanzi.server.com/` or `https://server.com/kanzi/` Note the trailing slash **MUST** be included. |
 | `-v /config` | Configuration files. |
 
 ## User / Group Identifiers
@@ -114,13 +120,36 @@ In this instance `PUID=1000` and `PGID=1000`, to find yours use `id user` as bel
 ### Initial setup
 * Once you start the container for the first time, you need to perform some steps before use.
  1.  Create an Amazon Developer Account [here.](https://developer.amazon.com/)
- 2.  Open a terminal in the docker container `docker exec -it lexigram bash`
- 3.  Enter the `/config` directory with `cd config`
- 4.  Enter `lexigram login --no-browser true` to setup your AWS credentials and copy the URL into a browser, login to your Amazon Developer Account and copy/paste the resulting authorisation code back into the terminal and press enter.
- 5.  Initialise the skill you wish to use with `lexigram init-skill kanzi`
- 6.  Deploy the skill with `lexigram deploy kanzi` and configure your endpoint in the form `https://server.com/kanzi/` (Be sure to include the trailing slash)
- 7.  Edit the file `kodi.config` according to your local setup and this will be used by the included gunicorn server to respond to requests.
- 8.  Reverse proxy this container with our [LetsEncrypt container](https://hub.docker.com/r/linuxserver/letsencrypt/)
+ 2.  Open a terminal in the `/config` directory of the docker container `docker exec -itw /config kanzi bash`
+ 3.  Enter `lexigram login --no-browser true` to setup your AWS credentials and copy the URL into a browser, login to your Amazon Developer Account and copy/paste the resulting authorisation code back into the terminal and press enter.
+ 4.  Edit the file `kodi.config` according to your local setup and this will be used by the included gunicorn server to respond to requests.  
+ 5.  Restart the container to automatically deploy the Kanzi skill.
+ 6.  Reverse proxy this container with our [LetsEncrypt container](https://hub.docker.com/r/linuxserver/letsencrypt/) which contains preconfigured templates for reverse proxying the Kanzi container on either a subdomain or subfolder utilising Docker custom networking.  Alternatively, if you already have an Nginx reverse proxy set up, you can use one of these location blocks to reverse proxy Kanzi to a subfolder or subdomain respectively.
+ 
+ Subfolder
+ ```
+ location /kanzi {
+   rewrite           ^/kanzi/(.*)  /$1  break;
+   proxy_pass         https://$IP-ADDRESS:8000;
+   proxy_redirect     https://$IP-ADDRESS:8000 /kanzi;
+   proxy_set_header   Host $host;
+   proxy_set_header   X-Real-IP $remote_addr;
+   proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+   proxy_set_header   X-Forwarded-Server $host;
+   proxy_set_header   X-Forwarded-Host $server_name;
+ }
+ ```
+ Subdomain
+ ```
+   location / {
+   proxy_pass         https://$IP-ADDRESS:8000;
+   proxy_set_header   Host $host;
+   proxy_set_header   X-Real-IP $remote_addr;
+   proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+   proxy_set_header   X-Forwarded-Server $host;
+   proxy_set_header   X-Forwarded-Host $server_name;
+ }
+ ```
 
 
 

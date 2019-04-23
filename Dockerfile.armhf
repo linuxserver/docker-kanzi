@@ -8,6 +8,7 @@ LABEL maintainer="chbmb"
 
 # environment settings
 ARG DEBIAN_FRONTEND="noninteractive"
+ARG KANZI_RELEASE
 
 RUN \
  echo "**** install packages ****" && \
@@ -25,11 +26,23 @@ RUN \
  rm -rf /var/lib/apt/lists/* && \
  apt-get install -y \
     npm && \
- echo "**** install kanzi ****"  && \ 
+ echo "**** install lexigram-cli ****"  && \ 
  npm install -g lexigram-cli -unsafe && \
- echo "**** install kanzi webserver ****" && \
- git clone --depth 1 https://github.com/m0ngr31/kanzi.git /app/kanzi && \
+ echo "**** install kanzi skill & webserver ****" && \
+ mkdir -p \
+	/app/kanzi && \
+ if [ -z ${KANZI_RELEASE+x} ]; then \
+	KANZI_RELEASE=$(curl -sX GET "https://api.github.com/repos/m0ngr31/kanzi/releases/latest" \
+	| awk '/tag_name/{print $4;exit}' FS='[""]'); \
+ fi && \
+ curl -o \
+ /tmp/kanzi.tar.gz -L \
+	"https://github.com/m0ngr31/kanzi/archive/${KANZI_RELEASE}.tar.gz" && \
+ tar xzf /tmp/kanzi.tar.gz --strip 1 -C \
+ /app/kanzi/ && \
  cd /app/kanzi && \
+ echo ${KANZI_RELEASE} > version.txt && \
+ touch /app/kanzi/deployed.txt && \
  pip install --no-cache-dir pip==9.0.3 && \
  pip install -r \
     requirements.txt \
