@@ -1,6 +1,7 @@
 #!/usr/bin/with-contenv bash
 
 # make our folders
+[[ ! -d /config/keys ]] && \
 mkdir -p \
 	/config/keys
 

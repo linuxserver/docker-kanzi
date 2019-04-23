@@ -45,7 +45,9 @@ if [ $? != 0 ]
     else
      echo "Either never deployed previously or previous deployed version of Kanzi ${DEPLOYED_VERSION} is different to version ${KANZI_VERSION} in this container, so deploying" && \
      cd /app/kanzi && \
-     lexigram init-skill kanzi && \
+     if [ ! -d /app/kanzi/kanzi ]; then
+       lexigram init-skill kanzi
+     fi
      lexigram deploy kanzi --source-dir /app/kanzi --invocation-name ${INVOCATION_NAME} --url ${URL_ENDPOINT} && \
      echo "${KANZI_VERSION}" > /config/deployed.txt && \
      echo "Kanzi ${KANZI_VERSION} successfully deployed with invocation name ${INVOCATION_NAME} at ${URL_ENDPOINT}"
