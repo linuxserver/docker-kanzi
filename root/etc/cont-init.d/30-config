@@ -50,7 +50,7 @@ if [ $? != 0 ]
      fi
      lexigram deploy kanzi --source-dir /app/kanzi --invocation-name ${INVOCATION_NAME} --url ${URL_ENDPOINT} && \
      echo "${KANZI_VERSION}" > /config/deployed.txt && \
-     echo "Kanzi ${KANZI_VERSION} successfully deployed with invocation name ${INVOCATION_NAME} at ${URL_ENDPOINT}"
+     echo "    Kanzi ${KANZI_VERSION} successfully deployed with invocation name ${INVOCATION_NAME} at ${URL_ENDPOINT}"
    fi
 fi
 
