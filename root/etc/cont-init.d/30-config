@@ -39,7 +39,7 @@ if [ $? != 0 ]
  then
   echo "Please see the readme at https://github.com/linuxserver/docker-kanzi#application-setup to register your Amazon Developer Account and configure your kodi.config file."
  else 
-  echo "Amazon Developer Account already linked" && \
+  echo "Amazon Developer Account already linked"
    if [ "${KANZI_VERSION}" = "${DEPLOYED_VERSION}" ]; then
      echo "${KANZI_VERSION} in this container is the same as the version previously deployed, not redeploying"
     else
@@ -47,8 +47,8 @@ if [ $? != 0 ]
      cd /app/kanzi
      lexigram init-skill kanzi
      lexigram deploy kanzi --source-dir /app/kanzi --invocation-name ${INVOCATION_NAME} --url ${URL_ENDPOINT}:function:kanzi
-     echo "${KANZI_VERSION}" > /config/deployed.txt && \
-     echo "Kanzi ${KANZI_VERSION} successfully deployed with invocation name ${INVOCATION_NAME} at ${URL_ENDPOINT}" && \
+     echo "${KANZI_VERSION}" > /config/deployed.txt
+     echo "Kanzi ${KANZI_VERSION} successfully deployed with invocation name ${INVOCATION_NAME} at ${URL_ENDPOINT}"
    fi
 fi
 
