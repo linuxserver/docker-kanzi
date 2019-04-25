@@ -3,4 +3,4 @@
 cd /app/kanzi || exit
 
 exec \
-	s6-setuidgid abc gunicorn -b 0.0.0.0:8000 --certfile /config/keys/certificate.pem --keyfile /config/keys/private-key.pem alexa:app
+	s6-setuidgid abc gunicorn -b 0.0.0.0:8000 --certfile /config/keys/kanzi/certificate.pem --keyfile /config/keys/kanzi/private-key.pem alexa:app

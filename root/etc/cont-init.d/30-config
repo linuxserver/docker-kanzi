@@ -1,8 +1,8 @@
 #!/usr/bin/with-contenv bash
 
 # Copy deployed.txt file to /config
-[[ ! -f /config/deployed.txt ]] && \
-    cp /app/kanzi/deployed.txt /config/deployed.txt
+[[ ! -f /config/deployed-kanzi.txt ]] && \
+    cp /app/kanzi/deployed-kanzi.txt /config/deployed-kanzi.txt
 
 # Create dummy cli_config
 [[ ! -f /config/cli_config ]] && \
@@ -31,7 +31,7 @@
 
 #Necessary variables
 KANZI_VERSION=$(cat /app/kanzi/version.txt)
-DEPLOYED_VERSION=$(cat /config/deployed.txt)
+DEPLOYED_VERSION=$(cat /config/deployed-kanzi.txt)
 
 # Check for credentials in cli_config
 grep -q token /config/cli_config
@@ -49,7 +49,7 @@ if [ $? != 0 ]
        lexigram init-skill kanzi
      fi
      lexigram deploy kanzi --source-dir /app/kanzi --invocation-name ${INVOCATION_NAME} --url ${URL_ENDPOINT} && \
-     echo "${KANZI_VERSION}" > /config/deployed.txt && \
+     echo "${KANZI_VERSION}" > /config/deployed-kanzi.txt && \
      echo "    Kanzi ${KANZI_VERSION} successfully deployed with invocation name ${INVOCATION_NAME} at ${URL_ENDPOINT}"
    fi
 fi
