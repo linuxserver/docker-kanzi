@@ -42,7 +42,7 @@ RUN \
  /app/kanzi/ && \
  cd /app/kanzi && \
  echo ${KANZI_RELEASE} > version.txt && \
- touch /app/kanzi/deployed.txt && \
+ touch /app/kanzi/deployed-kanzi.txt && \
  pip install --no-cache-dir pip==9.0.3 && \
  pip install -r \
     requirements.txt \

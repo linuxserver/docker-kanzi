@@ -1,12 +1,12 @@
 #!/usr/bin/with-contenv bash
 
 # make our folders
-[[ ! -d /config/keys ]] && \
+[[ ! -d /config/keys/kanzi ]] && \
 mkdir -p \
-	/config/keys
+	/config/keys/kanzi
 
 # create keys
-[[ ! -e /config/keys/certificate.pem ]] && \
+[[ ! -e /config/keys/kanzi/certificate.pem ]] && \
 	openssl req -x509 -nodes -days 3650 \
-	-newkey rsa:2048 -keyout /config/keys/private-key.pem  -out /config/keys/certificate.pem \
+	-newkey rsa:2048 -keyout /config/keys/kanzi/private-key.pem  -out /config/keys/kanzi/certificate.pem \
 	-subj "/CN=kanzi"
