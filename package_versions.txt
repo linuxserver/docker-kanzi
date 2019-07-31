@@ -1,7 +1,7 @@
 adduser3.116ubuntu1
 apt1.6.11
 apt-utils1.6.11
-base-files10.1ubuntu2.4
+base-files10.1ubuntu2.5
 base-passwd3.5.44
 bash4.4.18-2ubuntu1.2
 bsdutils1:2.31.1-0.4ubuntu3.3
@@ -75,8 +75,8 @@ libkeyutils11.5.9-9.2ubuntu2
 libkrb5-26-heimdal7.5.0+dfsg-1
 libkrb5-31.16-2ubuntu0.1
 libkrb5support01.16-2ubuntu0.1
-libldap-2.4-22.4.45+dfsg-1ubuntu1.2
-libldap-common2.4.45+dfsg-1ubuntu1.2
+libldap-2.4-22.4.45+dfsg-1ubuntu1.3
+libldap-common2.4.45+dfsg-1ubuntu1.3
 liblocale-gettext-perl1.07-3build2
 liblz4-10.0~r131-2ubuntu3
 liblzma55.2.2-1.3
@@ -127,7 +127,7 @@ libuuid12.31.1-0.4ubuntu3.3
 libwind0-heimdal7.5.0+dfsg-1
 libxml22.9.4+dfsg1-6.1ubuntu1.2
 libzstd11.3.3+dfsg-2ubuntu1
-linux-libc-dev4.15.0-54.58
+linux-libc-dev4.15.0-55.60
 locales2.27-3ubuntu1
 login1:4.5-1ubuntu2
 lsb-base9.20170808ubuntu1
