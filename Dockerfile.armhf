@@ -43,6 +43,7 @@ RUN \
  cd /app/kanzi && \
  echo ${KANZI_RELEASE} > version.txt && \
  touch /app/kanzi/deployed-kanzi.txt && \
+ sed -i 's|git+git|git+https|g' requirements.txt && \
  pip install --no-cache-dir pip==9.0.3 && \
  pip install -r \
     requirements.txt \
