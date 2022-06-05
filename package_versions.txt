@@ -22,7 +22,7 @@ findutils4.6.0+git+20170828-2
 gcc-7-base7.5.0-3ubuntu1~18.04
 gcc-8-base8.4.0-1ubuntu1~18.04
 gir1.2-glib-2.01.56.1-1
-gpgv2.2.4-1ubuntu1.4
+gpgv2.2.4-1ubuntu1.5
 grep3.1-2build1
 gzip1.6-5ubuntu1.1
 hostname3.20
@@ -128,7 +128,7 @@ libwind0-heimdal7.5.0+dfsg-1
 libxml22.9.4+dfsg1-6.1ubuntu1.6
 libzstd11.3.3+dfsg-2ubuntu1.2
 linux-libc-dev4.15.0-180.189
-locales2.27-3ubuntu1.5
+locales2.27-3ubuntu1.6
 login1:4.5-1ubuntu2.2
 lsb-base9.20170808ubuntu1
 manpages4.15-1
